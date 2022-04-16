@@ -1,0 +1,293 @@
+/*This c-app is using weasyprint to utilise css3 paged media for pdf export*/
+@page {
+    size: A4;
+    margin: 15mm 10mm 15mm 20mm;
+    
+
+    @top-left {
+        content: string(header);
+        /* text-transform: uppercase; */
+        font-size: 0.8em;
+        vertical-align: middle;
+        width: 100%;
+        border-bottom: 1px solid black;
+        margin: 10px;
+    }    
+
+    @bottom-center {
+        content: "For Demonstration Only";
+        font-size: 0.8em;
+        width: 100%;
+        vertical-align: middle;
+        border-top: 1px solid black;
+        margin: 10px;
+    }
+
+    @bottom-right {
+        content: counter(page) "/" counter(pages);
+        font-size: 0.8em;
+        vertical-align: middle;
+        
+    }
+
+    @footnote {
+        float: bottom;
+        border-top: 1px solid gray;
+        padding-top: 0.5em;
+
+        footnote-display: block;
+    }
+
+    /* @footnote::footnote-rule {
+        display: block;
+        border-top: 1px solid black;
+        padding-top: 0.5em;
+        margin-top: 0.5em;
+        width: fit-content;
+        margin-bottom: 0.5em;
+    } */
+
+}
+
+
+@page :first{
+  @top-left {
+    content: "";
+    border: none;
+  }
+  @bottom-right {
+    content: "";
+    border: none;
+  }
+  @bottom-center {
+    content: "";
+    border: none;
+  }
+}
+
+
+@page last_page {
+    @top-left {
+      content: "";
+      border: none;
+    }
+    @bottom-right {
+      content: "";
+      border: none;
+    }
+    @bottom-center {
+      content: "";
+      border: none;
+    }
+}
+
+
+/* 
+the commented css can put a whole html element into page margin but couldnot do it in jupyter notebook
+due to the custom html element is a child of too many div layers with position a table-cell:
+header {position: running(header);}
+
+Thus have to use string-set css to get the contents of the header
+*/
+header {string-set: header contents;}
+
+.last_page {
+    page: last_page;
+    text-align: center;
+}
+
+.footnote {
+    float: footnote;
+    font-size: 0.6em;
+    vertical-align: super;
+    display: inline-block;
+}
+
+::footnote-call {
+    content: "(" counter(footnote) ")";
+    vertical-align: super;
+    font-size: 0.6em;
+}
+
+::footnote-marker {
+    content: "(" counter(footnote) "): ";
+    vertical-align: baseline;
+}
+
+.jp-RenderedHTMLCommon ul, .jp-RenderedHTMLCommon ul ul, .jp-RenderedHTMLCommon ul ul ul {
+  list-style: none;
+}
+
+@media print {
+    .toc {
+        display: block;
+    }
+    
+    .toc a::after {
+        content: leader('.') target-counter(attr(href), page);
+    
+    }
+}
+
+:root {
+    --bg-color-complied: greenyellow;
+    --bg-color-moderate: yellow;
+    --bg-color-significant: red;
+
+    --color-complied: black;
+    --color-moderate: black;
+    --color-significant: white;
+
+    /*These below variables are in HTML exporter scheme. Override them to have our desired printing font*/
+    --jp-content-heading-margin-top: 0.3em;
+    --jp-content-heading-margin-bottom: 0.6em;
+    --jp-content-heading-font-weight: 700;
+
+    --jp-content-font-size1: 12px; /* Base font size */
+    --jp-content-font-size2: 1em;
+    --jp-content-font-size3: 1em;
+    --jp-content-font-size4: 1em;
+    --jp-content-font-size5: 1em;
+  
+}
+
+/* setting for pagebreak */
+.pagebreak {page-break-after: always;}
+h1 {page-break-before: always;}
+.jp-Cell-inputWrapper, .jp-Cell-inputArea {display: block;}
+
+/* settings for outcome */
+.outcome-complied {
+    color: var(--color-complied);
+    background-color: var(--bg-color-complied);
+}
+.outcome-moderate {
+    color: var(--color-moderate);
+    background-color: var(--bg-color-moderate);
+}
+.outcome-significant {
+    color: var(--color-significant);
+    background-color: var(--bg-color-significant);
+}
+
+/* settings for chapter & table caption numbering */
+body {counter-reset: heading1 heading2 heading3 heading4 mycaption;}
+h1 {counter-set: heading2 0 mycaption 0;} /* set counter to 0 */
+h2 {counter-set: heading3 0;}
+h3 {counter-set: heading4 0;}
+
+h1[id]:not([id="Table-of-Contents"]){counter-increment: heading1;}
+h2::before {counter-increment: heading2;}
+h3::before {counter-increment: heading3;}
+h4::before {content: counter(heading4) " ";} 
+    
+@media print {
+    h1[id]:not([id="Table-of-Contents"])::before {content: counter(heading1) "  ";}
+    h2::before {content: counter(heading1) "." counter(heading2) " ";}
+    h3::before {content: counter(heading1) "." counter(heading2)  "." counter(heading3) " ";}
+    h4::before {content: counter(heading4) " ";}        
+}
+
+caption:before {
+counter-increment: mycaption;
+content: "Table " counter(heading1) "." counter(mycaption) ": ";
+}
+
+p {
+    text-align: justify !important;
+}
+
+/* settings for standard table */
+.ctable {
+    border-collapse: collapse;
+    border: 1px solid black;
+    /* width: 100% */
+    font-size: 10px !important;
+}
+.ctable td, .ctable th {
+    border: 1px solid black;
+    padding: 0.5em;
+}
+.ctable caption {
+    color: black;
+    text-align: center;
+    font-weight: bold;
+    padding: 0.5em;
+}
+.ctable.pre-wrap-data td{
+    white-space: pre-wrap;
+}
+
+.ctable.text-left td, .ctable.text-left th {text-align: left;}
+.ctable.text-right td, .ctable.text-right th {text-align: right;}
+.ctable.text-center td, .ctable.text-center th {text-align: center;}
+
+.ctable.index-left .index_name {text-align: left;}
+.ctable.index-left .row_heading {text-align: left;}
+.ctable.index-right .index_name {text-align: right;}
+.ctable.index-right .row_heading {text-align: right;}
+.ctable.index-center .index_name {text-align: center;}
+.ctable.index-center .row_heading {text-align: center;}
+
+.ctable.col0-left .col0 {text-align: left;}
+.ctable.col1-left .col1 {text-align: left;}
+.ctable.col2-left .col2 {text-align: left;}
+.ctable.col3-left .col3 {text-align: left;}
+.ctable.col4-left .col4 {text-align: left;}
+.ctable.col5-left .col5 {text-align: left;}
+.ctable.col6-left .col6 {text-align: left;}
+.ctable.col7-left .col7 {text-align: left;}
+.ctable.col8-left .col8 {text-align: left;}
+.ctable.col9-left .col9 {text-align: left;}
+.ctable.col10-left .col10 {text-align: left;}
+.ctable.col11-left .col11 {text-align: left;}
+.ctable.col12-left .col12 {text-align: left;}
+
+.ctable.col0-right .col0 {text-align: right;}
+.ctable.col1-right .col1 {text-align: right;}
+.ctable.col2-right .col2 {text-align: right;}
+.ctable.col3-right .col3 {text-align: right;}
+.ctable.col4-right .col4 {text-align: right;}
+.ctable.col5-right .col5 {text-align: right;}
+.ctable.col6-right .col6 {text-align: right;}
+.ctable.col7-right .col7 {text-align: right;}
+.ctable.col8-right .col8 {text-align: right;}
+.ctable.col9-right .col9 {text-align: right;}
+.ctable.col10-right .col10 {text-align: right;}
+.ctable.col11-right .col11 {text-align: right;}
+.ctable.col12-right .col12 {text-align: right;}
+
+.ctable.col0-center .col0 {text-align: center;}
+.ctable.col1-center .col1 {text-align: center;}
+.ctable.col2-center .col2 {text-align: center;}
+.ctable.col3-center .col3 {text-align: center;}
+.ctable.col4-center .col4 {text-align: center;}
+.ctable.col5-center .col5 {text-align: center;}
+.ctable.col6-center .col6 {text-align: center;}
+.ctable.col7-center .col7 {text-align: center;}
+.ctable.col8-center .col8 {text-align: center;}
+.ctable.col9-center .col9 {text-align: center;}
+.ctable.col10-center .col10 {text-align: center;}
+.ctable.col11-center .col11 {text-align: center;}
+.ctable.col12-center .col12 {text-align: center;}
+
+.ctable.no-header thead {display: none;}
+.ctable.no-border td, .ctable.no-border th {border: none;}
+
+.ctable.key-definitions {min-width: 100%; table-layout: fixed;}
+.ctable.key-definitions th:nth-child(1) {width: 10%;}
+.ctable.key-definitions th:nth-child(1) {width: 90%;}
+.ctable.key-definitions td:last-child {width: 10%;}
+.ctable.key-definitions td:last-child {width: 90%;}
+
+/* .ctable.data-period {min-width: 100%; table-layout: fixed;} */
+.ctable.data-period th:first-child, .ctable.data-period td:first-child {width: 3cm;}
+.ctable.data-period th, .ctable.data-period td {width: 5cm;}
+
+.ctable.doc-signoff th {width: 3.5cm}
+.ctable.doc-signoff th:nth-child(1) {width: 2.5cm;}
+.ctable.doc-signoff th:nth-child(2) {width: 2.5cm;}
+.ctable.doc-signoff td {width: 3.5cm; height: 1.5cm;}
+.ctable.doc-signoff td:nth-child(1) {width: 2.5cm; height: 1.5cm;}
+.ctable.doc-signoff td:nth-child(2) {width: 2.5cm; height: 1.5cm;}
+

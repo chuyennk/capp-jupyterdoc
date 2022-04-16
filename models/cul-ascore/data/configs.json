@@ -1,0 +1,174 @@
+{
+    "capp_config": {
+        "SCORE": "ascore",
+        "BAD": "cust_bad",
+        "BAD_NAME": "Default", 
+        "BADRATE_NAME": "Default Rate", 
+        "COHORT_GROUP": ["sample", "cohort"],
+        "KEY_FIELD": "appl_id",
+        "SAMPLE_BASE_VALUE": "Baseline",
+        "SUB_SEGMENTS": [
+            {"name": "Product Type", "field": "product_type"}, 
+            {"name": "Product Type", "field":"seg1"}, 
+            {"name": "Product Type", "field": "seg2"}, 
+            {"name": "Gender", "field":"seg3"}]
+    },
+    "scoreband_config": {
+        "scoreband": [0, 200, 220, 240, 260, 280, 300, 320, 340, 360, 380, 999]
+    },
+    "waterfall_config": {
+        "indexField": "waterfall_ind",
+        "backendValue":"Back-end",
+        "category": {
+            "All": "01. Front-end",
+            "Rejected": "02. (-) Rejected",
+            "Insufficient Performance Window": "03. (-) Insufficient Performance Window",
+            "Indeterminated": "04. (-) Indeterminated",
+            "Back-end": "05. Back-end",
+            "0": "06. Good",
+            "1": "07. Bad"
+        }
+    },
+    "PSI_threshold": {
+        "Green": [0, 0.15],
+        "Yellow": [0.15, 0.25],
+        "Red": [0.25, 1]
+    },
+    "AHI_threshold": {
+        "Green": [0, 0.2],
+        "Yellow": [0.2, 1]
+    },
+    "CA_threshold": {
+        "breached": 4,
+        "top_factor": 4
+    },
+    "factor_config": {
+        "numberFactor": 11,
+        "factors": [
+            {
+                "factorSeq": 1,
+                "factorName": "Address Type",
+                "factorValue": "FV01",
+                "factorScore": "FS01",
+                "factorBuckets": ["01. Home", "02. Others"],
+                "factorBucketCut": {"01. Home": ["HOMADD"], "02. Others": "OTHERS"}
+            },
+            {
+                "factorSeq": 2,
+                "factorName": "Gender",
+                "factorValue": "FV02",
+                "factorScore": "FS02",
+                "factorBuckets": ["01. Male", "02. Female"],
+                "factorBucketCut": {"01. Male": "OTHERS", "02. Female": ["F"]}
+            },
+            {
+                "factorSeq": 3,
+                "factorName": "Education Level",
+                "factorValue": "FV03",
+                "factorScore": "FS03",
+                "factorBuckets": ["01. Degree & Above", "02. Pre-Uni", "03. Diploma & Cert", "04. Others"],
+                "factorBucketCut": {"01. Degree & Above": ["G", "M"], "02. Pre-Uni": ["E"], "03. Diploma & Cert":["C", "D"], "04. Others": "OTHERS"}
+            },
+            {
+                "factorSeq": 4,
+                "factorName": "Residential Status",
+                "factorValue": "FV04",
+                "factorScore": "FS04",
+                "factorBuckets": ["01. Own", "02. Mortgage", "03. Parent", "04. Others"],
+                "factorBucketCut": {"01. Own": ["OU"], "02. Mortgage":["OM"], "03. Parent":["PA"], "04. Others": "OTHERS"}
+            },
+            {
+                "factorSeq": 5,
+                "factorName": "Years of Service",
+                "factorValue": "FV05",
+                "factorScore": "FS05",
+                "factorBuckets": ["01. 1 year", "02. 2-6 years", "03. 7-9 years", "04. Above 9 years"],
+                "factorBucketCut": [0, 105, 605, 905, 99999]
+            },
+            {
+                "factorSeq": 6,
+                "factorName": "Deposits L3M",
+                "factorValue": "FV06",
+                "factorScore": "FS06",
+                "factorBuckets": ["01. No deposits", "02. < $500", "01. No deposits", "02. < $500", "03. [$500,$10k)", "04. $10k & Above"],
+                "factorBucketCut": [-999999,-99999, -0.00001, 0, 4.99999, 99.99999, 99999]
+            },
+            {
+                "factorSeq": 7,
+                "factorName": "MOB From Credit Bureau",
+                "factorValue": "FV07",
+                "factorScore": "FS07",
+                "factorBuckets": ["01. <= 1 year", "02. 2-3 years", "03. 4-9 years", "04. >= 10 years"],
+                "factorBucketCut": [-999999, 12, 36, 108, 999999]
+            },
+            {
+                "factorSeq": 8,
+                "factorName": "Number of New Application\"s Enquiries in CB in L6M",
+                "factorValue": "FV08",
+                "factorScore": "FS08",
+                "factorBuckets": ["05. No CB", "01. No enquiry", "02. 1-2","03. 3-4", "04. >= 5"],
+                "factorBucketCut": [-999999, -1, 0, 2, 4, 999999]
+            },
+            {
+                "factorSeq": 9,
+                "factorName": "Ever 30+dpd in CB in L12M",
+                "factorValue": "FV09",
+                "factorScore": "FS09",
+                "factorBuckets": ["01. Yes", "02. No"],
+                "factorBucketCut": {"01. Yes": "Y", "02. No": "N", "01. Yes": "OTHERS"}
+            },
+            {
+                "factorSeq": 10,
+                "factorName": "Months with Cash Advance L3M",
+                "factorValue": "FV10",
+                "factorScore": "FS10",
+                "factorBuckets": ["01. 0", "02. 1-2", "03. 3", "04. N.A"],
+                "factorBucketCut": {"01. 0": 0, "02. 1-2": [1,2], "03. 3": {"from": 3, "to": 99}, "04. N.A":"OTHERS"}
+            },
+            {
+                "factorSeq": 11,
+                "factorName": "Partial Payment L3M",
+                "factorValue": "FV11",
+                "factorScore": "FS11",
+                "factorBuckets": ["01. 0", "02. 1", "03. 2", "04. 3", "05. N.A"],
+                "factorBucketCut": {"01. 0": 0, "02. 1": 1, "03. 2": 2, "04. 3": {"from": 3, "to": 99}, "05. N.A":"OTHERS"}
+            }
+        ]
+    },
+    "backend_test_thresholds": {
+        "model_ranking": {
+            "relative": [-99, -0.3, -0.15, 99],
+            "relative_outcome": ["RED", "YELLOW", "GREEN"],
+            "absolute": [-99, 0, 0.4, 0.65, 99],
+            "absolute_outcome": ["RED", "RED", "YELLOW", "GREEN"],
+            "combined": [
+                {"key":["RED", "RED"], "value": "RED"},
+                {"key":["RED", "YELLOW"], "value": "RED"},
+                {"key":["RED", "GREEN"], "value": "RED"},
+                {"key":["YELLOW", "RED"], "value": "RED"},
+                {"key":["YELLOW", "YELLOW"], "value": "YELLOW"},
+                {"key":["YELLOW", "GREEN"], "value": "YELLOW"},
+                {"key":["GREEN", "RED"], "value": "YELLOW"},
+                {"key":["GREEN", "YELLOW"], "value": "GREEN"},
+                {"key":["GREEN", "GREEN"], "value": "GREEN"}
+            ]
+        },
+        "factor_ranking": {
+            "relative": [-99, -0.3, -0.15, 99],
+            "relative_outcome": ["RED", "YELLOW", "GREEN"],
+            "absolute": [-99, 0, 0.1, 0.15, 99],
+            "absolute_outcome": ["RED", "RED", "YELLOW", "GREEN"],
+            "combined": [
+                {"key":["RED", "RED"], "value": "RED"},
+                {"key":["RED", "YELLOW"], "value": "RED"},
+                {"key":["RED", "GREEN"], "value": "RED"},
+                {"key":["YELLOW", "RED"], "value": "RED"},
+                {"key":["YELLOW", "YELLOW"], "value": "YELLOW"},
+                {"key":["YELLOW", "GREEN"], "value": "YELLOW"},
+                {"key":["GREEN", "RED"], "value": "YELLOW"},
+                {"key":["GREEN", "YELLOW"], "value": "GREEN"},
+                {"key":["GREEN", "GREEN"], "value": "GREEN"}
+            ]
+        }
+    }
+}
